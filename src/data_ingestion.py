@@ -23,6 +23,7 @@ def get_load_data_from_entsoe(regions, periodStart='202201010000', periodEnd='20
 
     # Loop through the regions and get data for each region
     for region, area_code in regions.items():
+        
         print(f'Fetching data for {region}...')
         params['outBiddingZone_Domain'] = area_code
     
@@ -126,4 +127,3 @@ def main(start_time, end_time, output_path):
 if __name__ == "__main__":
     args = parse_arguments()
     main(args.start_time, args.end_time, args.output_path)
-    

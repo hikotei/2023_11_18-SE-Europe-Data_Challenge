@@ -4,37 +4,58 @@ import os
 
 regions = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
 
+# UK double values in generation due to 2 columns : Actual Aggregated, Actual Consumption
+# Also no load data for UK since ca. 2019
+
 def list_csv_files(directory):
     csv_files = [file for file in os.listdir(directory) if file.endswith(".csv")]
     return csv_files
 
-
 def load_data(file_path):
     # TODO: Load data from CSV file
-
     csv_files_list = list_csv_files(file_path)
 
     # df_all = pd.dataframe()
-    df_list = []
+    df_dict = {}
 
     os.chdir(file_path)
 
     # get data
     for csv_file in csv_files_list :
         df_temp = pd.read_csv(csv_file)
-        df_list.append(df_temp)
+
+        dict_key = csv_file.replace(".csv", "")
+        df_dict[dict_key] = df_temp
 
     os.chdir("./")
 
-    return df_list
+    return df_dict
 
 def clean_data(df):
     # TODO: Handle missing values, outliers, etc.
 
+    df['timestamp'] = df['StartTime'].astype('string')
+    df['timestamp'] = pd.to_datetime(df['timestamp'], format="%Y-%m-%dT%H:%M%zZ")
+    df.set_index('timestamp', inplace=True)
+
+    start = pd.to_datetime(df.index.min())
+    end = pd.to_datetime(df.index.max())
+
+    interval_in_min = round(((end - start) / df.shape[0]).seconds / 60)
+    dates = pd.date_range(start=start, end=end, freq=f'{interval_in_min} Min')
+
+    df_reindexed = df.reindex(dates)
+    df_clean = df_reindexed.interpolate(method='linear')
+
     return df_clean
 
 def preprocess_data(df):
-    # TODO: Generate new features, transform existing features, resampling, etc.
+    # TODO: Generate new features, transform existing features, resampling & aggregate, etc.
+
+    # aggregate to hourly level
+    df.resample("1h", label="left").sum()
+
+    df_processed = 
 
     return df_processed
 
@@ -64,10 +85,7 @@ def main(input_file, output_file):
     df_processed = preprocess_data(df_clean)
     save_data(df_processed, output_file)
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    # print(list_csv_files("./data"))
-    # print(load_data("./data"))
-
-    # args = parse_arguments()
-    # main(args.input_file, args.output_file)
+#     # args = parse_arguments()
+#     # main(args.input_file, args.output_file)
