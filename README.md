@@ -1,2 +1,3 @@
 # SE-Europe-Data_Challenge_Template
-Template repository to work with for the NUWE - Schneider Electric European Data Science Challenge in November 2023.
+
+predict which European country will have the highest surplus of green energy in the next hour
