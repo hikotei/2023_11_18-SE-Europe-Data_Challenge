@@ -17,3 +17,5 @@ fb81432a-3853-4c30-a105-117c86a433ca
 ### Data Processing
 
 Missing values in the dataset should be imputed as the mean between the preceding and following values. Data with resolution finer than 1 hour must be resampled to an hourly level.
+
+identify what energy types each column represent, and discard the ones that are not green energy sources
