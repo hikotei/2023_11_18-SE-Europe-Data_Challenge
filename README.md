@@ -19,3 +19,6 @@ fb81432a-3853-4c30-a105-117c86a433ca
 Missing values in the dataset should be imputed as the mean between the preceding and following values. Data with resolution finer than 1 hour must be resampled to an hourly level.
 
 identify what energy types each column represent, and discard the ones that are not green energy sources
+
+end up with a single CSV file which includes columns per country representing the following values: generated green energy per energy type (one column per wind, solar, etc), and load. Make sure that all those values are in the same units (MAW).
+
