@@ -1,9 +1,32 @@
 import argparse
+import pandas as pd
+import os
+
+regions = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
+
+def list_csv_files(directory):
+    csv_files = [file for file in os.listdir(directory) if file.endswith(".csv")]
+    return csv_files
+
 
 def load_data(file_path):
     # TODO: Load data from CSV file
 
-    return df
+    csv_files_list = list_csv_files(file_path)
+
+    # df_all = pd.dataframe()
+    df_list = []
+
+    os.chdir(file_path)
+
+    # get data
+    for csv_file in csv_files_list :
+        df_temp = pd.read_csv(csv_file)
+        df_list.append(df_temp)
+
+    os.chdir("./")
+
+    return df_list
 
 def clean_data(df):
     # TODO: Handle missing values, outliers, etc.
@@ -42,5 +65,9 @@ def main(input_file, output_file):
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
-    args = parse_arguments()
-    main(args.input_file, args.output_file)
+
+    # print(list_csv_files("./data"))
+    # print(load_data("./data"))
+
+    # args = parse_arguments()
+    # main(args.input_file, args.output_file)
