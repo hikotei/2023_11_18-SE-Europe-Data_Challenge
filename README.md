@@ -2,7 +2,7 @@
 
 GOAL = predict which European country (by code 1 to 9) will have the highest surplus of green energy in the next hour.
 
-the surplus of green energy is considered to be the difference between the summation of all generated green energy and the consumed energy (load).
+FCAST VARIABLE = the surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load).
 
 DATA = you can only use data up to 01-01-2023
 
