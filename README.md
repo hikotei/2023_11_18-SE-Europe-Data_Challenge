@@ -30,7 +30,6 @@ You will also need to add an additional column that will be your label: the ID o
 
 The country IDs used to evaluate your model will be the following:
 
-{
 SP: 0, # Spain  
 UK: 1, # United Kingdom  
 DE: 2, # Germany  
@@ -40,4 +39,3 @@ SE: 4, # Sweden
 IT: 6, # Italy  
 PO: 7, # Poland  
 NL: 8  # Netherlands  
-}
