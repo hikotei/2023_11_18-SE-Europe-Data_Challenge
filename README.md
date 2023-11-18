@@ -4,6 +4,8 @@ GOAL = predict which European country (by code 1 to 9) will have the highest sur
 
 DATA = you can only use data up to 01-01-2023
 
+### Data Import
+
 - [ ] write code to get ENTSOE Data through API
 
 You will need to provide a security token to make the ENTSO-E API calls. You can use the following one:
@@ -11,3 +13,7 @@ You will need to provide a security token to make the ENTSO-E API calls. You can
 
 If the first token reaches its API calls rate limit, you can use the next token:
 fb81432a-3853-4c30-a105-117c86a433ca
+
+### Data Processing
+
+Missing values in the dataset should be imputed as the mean between the preceding and following values. Data with resolution finer than 1 hour must be resampled to an hourly level.
