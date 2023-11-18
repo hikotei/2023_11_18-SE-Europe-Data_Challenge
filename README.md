@@ -8,7 +8,7 @@ DATA = you can only use data up to 01-01-2023
 
 ### Data Import
 
-- [ ] write code to get ENTSOE Data through API
+- [x] write code to get ENTSOE Data through API
 
 You will need to provide a security token to make the ENTSO-E API calls. You can use the following one:
 1d9cd4bd-f8aa-476c-8cc1-3442dc91506d
@@ -20,7 +20,7 @@ fb81432a-3853-4c30-a105-117c86a433ca
 
 Missing values in the dataset should be imputed as the mean between the preceding and following values. Data with resolution finer than 1 hour must be resampled to an hourly level.
 
-identify what energy types each column represent, and discard the ones that are not green energy sources
+identify what energy types each column represent, and discard the ones that are not green energy sources (You can refer to the ENTSO-E Transparency portal API documentation to understand how the energy source types are represented)
 
 end up with a single CSV file which includes columns per country representing the following values: generated green energy per energy type (one column per wind, solar, etc), and load. Make sure that all those values are in the same units (MAW).
 
@@ -39,3 +39,11 @@ SE: 4, # Sweden
 IT: 6, # Italy  
 PO: 7, # Poland  
 NL: 8  # Netherlands  
+
+### Model
+
+Your model predictions with the test data should be stored in the same format at the example_predictions.json file provided where for each entry (data point of your time series) you have a country ID predicted for the next hour. 
+
+The final file should be called predictions.json. This file will be the one used to evaluate your model performance on F1-score macro.
+
+### EVALUATION
