@@ -114,8 +114,10 @@ def make_url(base_url, params):
     return f"{base_url}?{query_string}"
 
 def perform_get_request(base_url, params):
+
     url = make_url(base_url, params)
     response = requests.get(url)
+    
     if response.status_code == 200:
         return response.text
     else:

@@ -1,6 +1,5 @@
 import argparse
 import datetime
-import pandas as pd
 from utils import perform_get_request, xml_to_load_dataframe, xml_to_gen_data
 
 def get_load_data_from_entsoe(regions, periodStart='202201010000', periodEnd='202301010000', output_path='./data'):
@@ -23,6 +22,7 @@ def get_load_data_from_entsoe(regions, periodStart='202201010000', periodEnd='20
 
     # Loop through the regions and get data for each region
     for region, area_code in regions.items():
+
         print(f'Fetching data for {region}...')
         params['outBiddingZone_Domain'] = area_code
     
@@ -31,6 +31,7 @@ def get_load_data_from_entsoe(regions, periodStart='202201010000', periodEnd='20
 
         # Response content is a string of XML data
         df = xml_to_load_dataframe(response_content)
+        df.dropna(subset=['AreaID'], inplace=True)
 
         # Save the DataFrame to a CSV file
         df.to_csv(f'{output_path}/load_{region}.csv', index=False)
@@ -70,10 +71,10 @@ def get_gen_data_from_entsoe(regions, periodStart='202302240000', periodEnd='202
         # Save the dfs to CSV files
         for psr_type, df in dfs.items():
             # Save the DataFrame to a CSV file
+            df.dropna(subset=['AreaID'], inplace=True)
             df.to_csv(f'{output_path}/gen_{region}_{psr_type}.csv', index=False)
     
     return
-
 
 def parse_arguments():
 
@@ -82,13 +83,13 @@ def parse_arguments():
     parser.add_argument(
         '--start_time', 
         type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), 
-        default=datetime.datetime(2023, 1, 1), 
+        default=datetime.datetime(2022, 1, 1), 
         help='Start time for the data to download, format: YYYY-MM-DD'
     )
     parser.add_argument(
         '--end_time', 
         type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), 
-        default=datetime.datetime(2023, 1, 2), 
+        default=datetime.datetime(2023, 1, 1), 
         help='End time for the data to download, format: YYYY-MM-DD'
     )
     parser.add_argument(
@@ -124,6 +125,6 @@ def main(start_time, end_time, output_path):
     get_gen_data_from_entsoe(regions, start_time, end_time, output_path)
 
 if __name__ == "__main__":
+
     args = parse_arguments()
     main(args.start_time, args.end_time, args.output_path)
-    
