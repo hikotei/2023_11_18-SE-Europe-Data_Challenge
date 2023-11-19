@@ -21,19 +21,18 @@ reversed_regions = {v: k for k, v in regions.items()}
 # UK double values in generation due to 2 columns : Actual Aggregated, Actual Consumption
 # Also no load data for UK since ca. 2019
 
-def list_csv_files(directory):
-    csv_files = [file for file in os.listdir(directory) if file.endswith(".csv")]
-    csv_files.remove('test.csv')
-    return csv_files
+def load_data(file_path) -> dict:
 
-def load_data(file_path):
-    # TODO: Load data from CSV file
-    csv_files_list = list_csv_files(file_path)
-
-    # df_all = pd.dataframe()
-    df_dict = {}
+    """
+    loads data from file_path 
+    """
 
     os.chdir(file_path)
+    # Lists all csv files that begin with "load" or "gen"
+    csv_files_list = [file for file in os.listdir(file_path) 
+                      if (file.endswith(".csv") and (file.startswith("load") or file.startswith("gen")))]
+
+    df_dict = {}
 
     # get data
     for csv_file in csv_files_list :
@@ -46,19 +45,20 @@ def load_data(file_path):
 
     return df_dict
 
-def clean_data(df_dict):
-    # TODO: Handle missing values, outliers, etc.
+def clean_data(df_dict) -> dict:
+
+    """ 
+    Handles missing values, outliers, etc. 
+    """
 
     df_dict_clean = {}
 
     for df_name, df in df_dict.items(): 
 
-        print('-'*15)
-        print(df_name)
-        print(df.columns)
-
         if (df.empty) :
-            print('df empty')
+            print('-'*15)
+            print(f'{df_name} is empty')
+            print('-'*15)
             continue
 
         df['timestamp'] = df['StartTime'].astype('string')
@@ -79,20 +79,19 @@ def clean_data(df_dict):
     return df_dict_clean
 
 def preprocess_data(df_dict):
-    # TODO: Generate new features, transform existing features, resampling & aggregate, etc.
     
-    print('='*30)
-    print('start preprocess')
+    """ 
+    Generates new features, transform existing features, resampling & aggregate, etc. 
+    """
 
     df_processed = pd.DataFrame()
 
     for df_name, df in df_dict.items(): 
 
-        print('-'*15)
-        print(df_name)
-
         if (df.empty) :
-            print('df empty')
+            print('-'*15)
+            print(f'{df_name} is empty')
+            print('-'*15)
             continue
 
         AreaID = df['AreaID'][0]
@@ -117,9 +116,12 @@ def preprocess_data(df_dict):
     return df_processed
 
 def save_data(df, output_file):
-    # TODO: Save processed data to a CSV file
 
-    # TODO: better name
+    """ 
+    Generates new features, transform existing features, resampling & aggregate, etc. 
+    """
+
+    # TODO: better name including dates
     df.to_csv(f'{output_file}/all_data.csv', index=False)
 
     return
@@ -148,11 +150,12 @@ def main(input_file, output_file):
 
 if __name__ == "__main__":
 
-    print(os.getcwd())
-    df_dict = load_data("./data")
-    df_dict_clean = clean_data(df_dict)
-    df_prepro = preprocess_data(df_dict)
-    print(df_prepro)
+    print(f"cwd = {os.getcwd()}")
+    print(list_csv_files("./data"))
+    # df_dict = load_data("./data")
+    # df_dict_clean = clean_data(df_dict)
+    # df_prepro = preprocess_data(df_dict)
+    # print(df_prepro)
 
 #     # args = parse_arguments()
 #     # main(args.input_file, args.output_file)
