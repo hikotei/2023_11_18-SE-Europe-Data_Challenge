@@ -11,11 +11,13 @@ def list_csv_files(directory):
 
 def load_data(file_path):
     # TODO: Load data from CSV file
-
+    
+    # Create file list with all csv files
     csv_files_list = list_csv_files(file_path)
 
     # df_all = pd.dataframe()
     df_list = []
+
 
     os.chdir(file_path)
 
@@ -30,7 +32,7 @@ def load_data(file_path):
 
 def clean_data(df):
     # TODO: Handle missing values, outliers, etc.
-
+    
     return df_clean
 
 def preprocess_data(df):
