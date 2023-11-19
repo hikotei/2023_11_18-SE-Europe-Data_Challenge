@@ -151,7 +151,6 @@ def main(input_file, output_file):
 if __name__ == "__main__":
 
     print(f"cwd = {os.getcwd()}")
-    print(list_csv_files("./data"))
     # df_dict = load_data("./data")
     # df_dict_clean = clean_data(df_dict)
     # df_prepro = preprocess_data(df_dict)
