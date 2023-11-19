@@ -113,9 +113,7 @@ def preprocess_data(df_dict):
 
     for df_name, df in df_dict.items(): 
 
-        # len index because UK has columns but no values
-        # so df.empty returns FALSE
-        if (len(df.index) == 0) :
+        if (df.empty) :
             print('-'*15)
             print(f'{df_name} is empty')
             print('-'*15)
