@@ -158,6 +158,8 @@ def preprocess_data(df_dict):
     # map the country code based on the order defined in country_code_order
     df_processed['max_surplus_country_code'] = df_processed['max_surplus_country_name'].map(country_codes_dict)
 
+    df_processed['max_surplus_country_code_next_hr'] = df_processed['max_surplus_country_code'].shift(-1)
+
     return df_processed
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -167,7 +169,7 @@ def save_data(df, output_file):
     """ 
     Generates new features, transform existing features, resampling & aggregate, etc. 
     """
-    
+
     df.to_csv(f'{output_file}', index=False)
 
     return
