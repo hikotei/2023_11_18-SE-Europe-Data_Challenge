@@ -2,7 +2,11 @@ import argparse
 import pandas as pd
 import os
 
-# regions = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# PROBLEMS !!!
+# UK values are repeated in generation data due to receiving 2 columns : Actual Aggregated, Actual Consumption
+# Also no load data for UK since approx. 2019
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 regions = {
     'HU': '10YHU-MAVIR----U',
@@ -17,9 +21,13 @@ regions = {
 }
 
 reversed_regions = {v: k for k, v in regions.items()}
+# regions = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
 
-# UK double values in generation due to 2 columns : Actual Aggregated, Actual Consumption
-# Also no load data for UK since ca. 2019
+# List of generated energy types that are classified as GREEN
+# to be used in calculation of surplus green energy production per country
+green_energy_types_list = ["B01", "B09", "B10", "B11", "B12", "B13", "B15", "B16", "B18", "B19"]
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 def load_data(file_path) -> dict:
 
@@ -27,6 +35,7 @@ def load_data(file_path) -> dict:
     loads data from file_path 
     """
 
+    wd = os.getcwd()
     os.chdir(file_path)
     # Lists all csv files that begin with "load" or "gen"
     csv_files_list = [file for file in os.listdir(file_path) 
@@ -41,9 +50,11 @@ def load_data(file_path) -> dict:
         dict_key = csv_file.replace(".csv", "")
         df_dict[dict_key] = df_temp
 
-    os.chdir("./")
+    os.chdir(wd)
 
     return df_dict
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 def clean_data(df_dict) -> dict:
 
@@ -86,6 +97,8 @@ def clean_data(df_dict) -> dict:
 
     return df_dict_clean
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 def preprocess_data(df_dict):
     
     """ 
@@ -110,19 +123,21 @@ def preprocess_data(df_dict):
         
         # determine whether its gen or load file
         if df_name.startswith('load') : pwr_type = 'load'
-        else : pwr_type = PsrType = df['PsrType'][0]
+        else : pwr_type = df['PsrType'][0]
 
         # resample (aggregate) to hourly level and sum
         df_resampled = df.resample("1h", label="left").sum()
-
+        
         # assign new column name including country, power type and unit information
-        new_name = f"{country}_{UnitName}_{pwr_type}"
-        df_resampled.rename(columns={'quantity': new_name}, inplace=True)
+        new_name = f"{country}_{pwr_type}_{UnitName}"
+        df_resampled.rename(columns={df_resampled.columns[0]: new_name}, inplace=True)
 
         # concatenate to output dataframe
         df_processed = pd.concat([df_processed, df_resampled], axis=1)
 
     return df_processed
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 def save_data(df, output_file):
 
@@ -134,6 +149,8 @@ def save_data(df, output_file):
     df.to_csv(f'{output_file}/all_data.csv', index=False)
 
     return
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Data processing script for Energy Forecasting Hackathon')
@@ -151,19 +168,23 @@ def parse_arguments():
     )
     return parser.parse_args()
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 def main(input_file, output_file):
     df = load_data(input_file)
     df_clean = clean_data(df)
     df_processed = preprocess_data(df_clean)
     save_data(df_processed, output_file)
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 if __name__ == "__main__":
 
     print(f"cwd = {os.getcwd()}")
 
-    # df_dict = load_data("./data")
-    # df_dict_clean = clean_data(df_dict)
-    # df_prepro = preprocess_data(df_dict)
+    df_dict = load_data("./data")
+    df_dict_clean = clean_data(df_dict)
+    df_prepro = preprocess_data(df_dict)
 
     # print(df_prepro.head())
 
