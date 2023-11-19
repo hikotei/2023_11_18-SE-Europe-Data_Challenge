@@ -1,6 +1,5 @@
 import argparse
 import datetime
-import pandas as pd
 from utils import perform_get_request, xml_to_load_dataframe, xml_to_gen_data
 
 def get_load_data_from_entsoe(regions, periodStart='202201010000', periodEnd='202301010000', output_path='./data'):
@@ -126,5 +125,6 @@ def main(start_time, end_time, output_path):
     get_gen_data_from_entsoe(regions, start_time, end_time, output_path)
 
 if __name__ == "__main__":
+
     args = parse_arguments()
     main(args.start_time, args.end_time, args.output_path)

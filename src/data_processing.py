@@ -21,7 +21,7 @@ regions = {
 }
 
 reversed_regions = {v: k for k, v in regions.items()}
-# regions = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
+country_labels = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
 
 # List of generated energy types that are classified as GREEN
 # to be used in calculation of surplus green energy production per country
@@ -36,6 +36,8 @@ def load_data(file_path) -> dict:
     """
 
     wd = os.getcwd()
+    print(f"wd = {wd}")
+    print(f"file path = {file_path}")
     os.chdir(file_path)
     # Lists all csv files that begin with "load" or "gen"
     csv_files_list = [file for file in os.listdir(file_path) 
@@ -106,34 +108,56 @@ def preprocess_data(df_dict):
     """
 
     df_processed = pd.DataFrame()
+    country_list = []
 
     for df_name, df in df_dict.items(): 
 
-        if (df.empty) :
+        # len index because UK has columns but no values
+        # so df.empty returns FALSE
+        if (len(df.index) == 0) :
             print('-'*15)
             print(f'{df_name} is empty')
             print('-'*15)
             continue
         
         # all csv files (gen and load) have column AreaID and UnitName
-        AreaID = df['AreaID'][0]
-        country = reversed_regions[AreaID]
-        # country = df_name.str.split('_').str.get(1) # alternative
         UnitName = df['UnitName'][0]
-        
+        country = df_name.split('_')[1] # alternative
+        # add country to country_list if its new
+        if country not in country_list:
+            country_list.append(country)
+
         # determine whether its gen or load file
         if df_name.startswith('load') : pwr_type = 'load'
         else : pwr_type = df['PsrType'][0]
 
         # resample (aggregate) to hourly level and sum
         df_resampled = df.resample("1h", label="left").sum()
-        
         # assign new column name including country, power type and unit information
         new_name = f"{country}_{pwr_type}_{UnitName}"
         df_resampled.rename(columns={df_resampled.columns[0]: new_name}, inplace=True)
 
         # concatenate to output dataframe
         df_processed = pd.concat([df_processed, df_resampled], axis=1)
+    
+    for country in country_list :
+        # take the sum over all green energies
+        green_columns = [col for col in df_processed.columns 
+                         if col.startswith(f"{country}_") 
+                         and any(energy_type in col for energy_type in green_energy_types_list)]
+        
+        # sum of green energies
+        df_processed[f"{country}_green_MAW"] = df_processed[green_columns].sum(axis=1)
+        
+        # green energy surplus = difference between DE_green_MAW and DE_load_MAW
+        load_column = f"{country}_load_MAW"
+        df_processed[f"{country}_green_surplus_MAW"] = df_processed[f"{country}_green_MAW"] - df_processed[load_column]
+
+    # add column with the country that has the highest surplus of green energy at each hour
+    df_processed['max_surplus_country_name'] = df_processed.apply(lambda row: max(country_list, key=lambda country: row[f"{country}_green_surplus_MAW"]), axis=1)
+
+    # map the country code based on the order defined in country_code_order
+    df_processed['max_surplus_country_code'] = df_processed['max_surplus_country_name'].map(country_codes_dict)
 
     return df_processed
 
@@ -154,12 +178,21 @@ def save_data(df, output_file):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Data processing script for Energy Forecasting Hackathon')
+
+    # parser.add_argument(
+    #     '--input_file',
+    #     type=str,
+    #     default='data/raw_data.csv',
+    #     help='Path to the raw data file to process'
+    # )
+
     parser.add_argument(
-        '--input_file',
+        '--input_dir',
         type=str,
-        default='data/raw_data.csv',
-        help='Path to the raw data file to process'
+        default='./data',
+        help='Path to the raw data files to process'
     )
+
     parser.add_argument(
         '--output_file', 
         type=str, 
@@ -170,23 +203,17 @@ def parse_arguments():
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-def main(input_file, output_file):
-    df = load_data(input_file)
-    df_clean = clean_data(df)
-    df_processed = preprocess_data(df_clean)
+def main(input_dir, output_file):
+
+    df_dict = load_data(input_dir)
+    df_dict_clean = clean_data(df_dict)
+    df_processed = preprocess_data(df_dict_clean)
     save_data(df_processed, output_file)
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 if __name__ == "__main__":
 
-    print(f"cwd = {os.getcwd()}")
-
-    df_dict = load_data("./data")
-    df_dict_clean = clean_data(df_dict)
-    df_prepro = preprocess_data(df_dict)
-
-    # print(df_prepro.head())
-
-#     # args = parse_arguments()
-#     # main(args.input_file, args.output_file)
+    print(os.getcwd())
+    args = parse_arguments()
+    main(args.input_dir, args.output_file)
