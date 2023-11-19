@@ -160,10 +160,12 @@ def main(input_file, output_file):
 if __name__ == "__main__":
 
     print(f"cwd = {os.getcwd()}")
+
     # df_dict = load_data("./data")
     # df_dict_clean = clean_data(df_dict)
     # df_prepro = preprocess_data(df_dict)
-    # print(df_prepro)
+
+    # print(df_prepro.head())
 
 #     # args = parse_arguments()
 #     # main(args.input_file, args.output_file)

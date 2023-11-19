@@ -77,7 +77,6 @@ def get_gen_data_from_entsoe(regions, periodStart='202302240000', periodEnd='202
     
     return
 
-
 def parse_arguments():
 
     parser = argparse.ArgumentParser(description='Data ingestion script for Energy Forecasting Hackathon')
@@ -85,13 +84,13 @@ def parse_arguments():
     parser.add_argument(
         '--start_time', 
         type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), 
-        default=datetime.datetime(2023, 1, 1), 
+        default=datetime.datetime(2022, 1, 1), 
         help='Start time for the data to download, format: YYYY-MM-DD'
     )
     parser.add_argument(
         '--end_time', 
         type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), 
-        default=datetime.datetime(2023, 1, 2), 
+        default=datetime.datetime(2023, 1, 1), 
         help='End time for the data to download, format: YYYY-MM-DD'
     )
     parser.add_argument(
