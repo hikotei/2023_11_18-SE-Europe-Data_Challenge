@@ -167,8 +167,7 @@ def save_data(df, output_file):
     """ 
     Generates new features, transform existing features, resampling & aggregate, etc. 
     """
-
-    # TODO: better name including dates
+    
     df.to_csv(f'{output_file}', index=False)
 
     return
