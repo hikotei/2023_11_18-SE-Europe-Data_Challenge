@@ -61,19 +61,27 @@ def clean_data(df_dict) -> dict:
             print('-'*15)
             continue
 
+        # create new timestamp index based on interval start time
         df['timestamp'] = df['StartTime'].astype('string')
         df['timestamp'] = pd.to_datetime(df['timestamp'], format="%Y-%m-%dT%H:%M%zZ")
         df.set_index('timestamp', inplace=True)
 
+        # get start and end time of data
         start = pd.to_datetime(df.index.min())
         end = pd.to_datetime(df.index.max())
 
-        interval_in_min = round(((end - start) / df.shape[0]).seconds / 60)
-        dates = pd.date_range(start=start, end=end, freq=f'{interval_in_min} Min')
+        # estimate interval
+        interval_in_data = round(((end - start) / df.shape[0]).seconds / 60)
+        interval_estimated = min(15, 60, key=lambda x: abs(interval_in_data - x))
+        dates = pd.date_range(start=start, end=end, freq=f'{interval_estimated} Min')
 
+        # reindex data based on original interval, missing values get NaN
         df_reindexed = df.reindex(dates)
+
+        # interpolate data
         df_clean = df_reindexed.interpolate(method='linear')
 
+        # save to output dict
         df_dict_clean[df_name] = df_clean
 
     return df_dict_clean
@@ -93,24 +101,25 @@ def preprocess_data(df_dict):
             print(f'{df_name} is empty')
             print('-'*15)
             continue
-
+        
+        # all csv files (gen and load) have column AreaID and UnitName
         AreaID = df['AreaID'][0]
         country = reversed_regions[AreaID]
-        # country = df_name.str.split('_').str.get(1)
-
+        # country = df_name.str.split('_').str.get(1) # alternative
         UnitName = df['UnitName'][0]
         
+        # determine whether its gen or load file
         if df_name.startswith('load') : pwr_type = 'load'
         else : pwr_type = PsrType = df['PsrType'][0]
 
-        # Resample to hourly level and sum
+        # resample (aggregate) to hourly level and sum
         df_resampled = df.resample("1h", label="left").sum()
 
+        # assign new column name including country, power type and unit information
         new_name = f"{country}_{UnitName}_{pwr_type}"
-        print(new_name)
-
         df_resampled.rename(columns={'quantity': new_name}, inplace=True)
 
+        # concatenate to output dataframe
         df_processed = pd.concat([df_processed, df_resampled], axis=1)
 
     return df_processed
