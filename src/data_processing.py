@@ -21,10 +21,12 @@ regions = {
 }
 
 reversed_regions = {v: k for k, v in regions.items()}
+
+# dictionary to map country codes to labels
+country_codes_dict = {'SP': 0, 'UK': 1, 'DE': 2, 'DK': 3, 'SE': 4, 'HU': 5, 'IT': 6, 'PO': 7, 'NL': 8}
 country_labels = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
 
-# List of generated energy types that are classified as GREEN
-# to be used in calculation of surplus green energy production per country
+# List of generated energy types that are classified as GREEN to be used in calculation of surplus green energy production per country
 green_energy_types_list = ["B01", "B09", "B10", "B11", "B12", "B13", "B15", "B16", "B18", "B19"]
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -35,17 +37,16 @@ def load_data(file_path) -> dict:
     loads data from file_path 
     """
 
-    wd = os.getcwd()
-    print(f"wd = {wd}")
-    print(f"file path = {file_path}")
-    os.chdir(file_path)
-    # Lists all csv files that begin with "load" or "gen"
+    # lists all csv files that begin with "load" or "gen"
     csv_files_list = [file for file in os.listdir(file_path) 
                       if (file.endswith(".csv") and (file.startswith("load") or file.startswith("gen")))]
 
     df_dict = {}
 
     # get data
+    wd = os.getcwd()
+    os.chdir(file_path)
+
     for csv_file in csv_files_list :
         df_temp = pd.read_csv(csv_file)
 
@@ -170,7 +171,7 @@ def save_data(df, output_file):
     """
 
     # TODO: better name including dates
-    df.to_csv(f'{output_file}/all_data.csv', index=False)
+    df.to_csv(f'{output_file}', index=False)
 
     return
 
@@ -217,3 +218,4 @@ if __name__ == "__main__":
     print(os.getcwd())
     args = parse_arguments()
     main(args.input_dir, args.output_file)
+    print('done')
