@@ -8,7 +8,7 @@ DATA = you can only use data up to 01-01-2023
 
 ### Data Import
 
-- [x] write code to get ENTSOE Data through API
+write code to get ENTSOE Data through API
 
 You will need to provide a security token to make the ENTSO-E API calls. You can use the following one:
 1d9cd4bd-f8aa-476c-8cc1-3442dc91506d
