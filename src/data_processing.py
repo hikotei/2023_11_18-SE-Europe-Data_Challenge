@@ -135,9 +135,13 @@ def preprocess_data(df_dict):
         # assign new column name including country, power type and unit information
         new_name = f"{country}_{pwr_type}_{UnitName}"
         df_resampled.rename(columns={df_resampled.columns[0]: new_name}, inplace=True)
-
+        
         # concatenate to output dataframe
         df_processed = pd.concat([df_processed, df_resampled], axis=1)
+
+        if ('timestamp' not in df_processed.columns) :
+            print('add timestamp')
+            df_processed['timestamp'] = df_resampled.index
     
     for country in country_list :
         # take the sum over all green energies
