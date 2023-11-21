@@ -31,7 +31,7 @@ def split_data(df : pd.DataFrame):
     """
 
     # Define cut off
-    cut_off_percentage = 0.1
+    cut_off_percentage = 0.8
     cut_off = int(cut_off_percentage*len(df))
 
     # Split data set
@@ -95,6 +95,8 @@ def save_model(model, model_path):
 
     with open(model_path, 'wb') as file:
         pickle.dump(model, file)
+
+    print(f"models have been saved in .pkl file")
 
     return
 
