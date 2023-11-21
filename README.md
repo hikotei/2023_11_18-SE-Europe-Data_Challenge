@@ -1,10 +1,5 @@
 # SE-Europe-Data_Challenge_Template
 
-GOAL = predict which European country (by code 1 to 9) will have the highest surplus of green energy in the next hour.
-FCAST VARIABLE = the surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load).
-DATA = you can only use data up to 01-01-2023
-
-|  |  |
 |------|---------------------------------------------------------------------------------------------------------------|
 | Goal | Predict which European country (by code 1 to 9) will have the highest surplus of green energy in the next hour. |
 | Forecast Variable | The surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load). |
