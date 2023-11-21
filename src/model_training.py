@@ -81,7 +81,7 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
         # Train models based on X_train
         model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit(disp=False)
         model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit(disp=False)
-        print(f"{idx}/{len(country_labels)} ... {country} has been trained successfully")
+        print(f"{idx+1}/{len(country_labels)} ... {country} has been trained successfully")
     
     model = [model_gen_training_dict,model_load_training_dict]
     
@@ -129,4 +129,4 @@ def main(input_file, model_file):
 if __name__ == "__main__":
 
     args = parse_arguments()
-    main(args.input_file, args.model_file)
+    main(args.input_file, args.model_fil
