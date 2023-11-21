@@ -1,8 +1,12 @@
-## About The Project: SE-Europe-Data_Challenge_Template
+# SE-Europe-Data_Challenge
+
+### About The Project: 
 
 Hackathon organized by NUWE and Schneider Electric ([Link to Event](https://nuwe.io/dev/competitions/schneider-electric-european-2023))
 
 Team: CleanCoders
+
+<img src="logo.jpeg" align="left" />
 
 ||Description|
 |------|---------------------------------------------------------------------------------------------------------------|
