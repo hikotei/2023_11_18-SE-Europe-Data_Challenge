@@ -76,14 +76,14 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
 
     # Model Training and initialization
     for idx, country in enumerate(country_labels):
-        
-        print(f"{idx}/{len(country_labels)} ... {country} start", end='')
+
+        print(f"{idx+1}/{len(country_labels)} ... {country} start", end='')
         green_gen_dict[country] = "green_energy_" + country
         load_dict[country] = country + "_load"
     
         # Train models based on X_train
-        model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit(disp=False, low_memory=True)
-        model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit(disp=False, low_memory=True)
+        model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit(disp=False)
+        model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit(disp=False)
         print(f"... training done")
     
     model = [model_gen_training_dict,model_load_training_dict]

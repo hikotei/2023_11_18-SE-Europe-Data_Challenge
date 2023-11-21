@@ -34,8 +34,6 @@ def make_predictions(df, model):
     surplus_pred_df = pd.DataFrame()
 
     country_labels = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
-
-    
     country_codes_dict = {'SP': 0, 'UK': 1, 'DE': 2, 'DK': 3, 'SE': 4, 'HU': 5, 'IT': 6, 'PO': 7, 'NL': 8}
 
     # Model Training and initialization
@@ -52,7 +50,7 @@ def make_predictions(df, model):
     # lots of data missing from UK, so drop it
     surplus_pred_df = surplus_pred_df.drop('UK',axis=1)
 
-    print(surplus_pred_df.head())
+    # print(surplus_pred_df.head())
     surplus_pred_df["Max"]=surplus_pred_df.idxmax(axis=1)
     predictions = surplus_pred_df["Max"].map(country_codes_dict)
 
@@ -64,7 +62,7 @@ def save_predictions(predictions, predictions_file):
     res_df = pd.DataFrame({'target' : predictions})
     res_df.to_json(predictions_file)
 
-    pass
+    return
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Prediction script for Energy Forecasting Hackathon')
@@ -91,6 +89,11 @@ def parse_arguments():
 def main(input_file, model_file, output_file):
     df = load_data(input_file)
     model = load_model(model_file)
+
+    # print(model[0]['HU'].params)
+    # pred = sm.tsa.SARIMAX(df['green_energy_HU'], order=(4,0,12)).filter(model[0]['HU'].params).predict()
+    # print(pred)
+
     predictions = make_predictions(df, model)
     save_predictions(predictions, output_file)
 
