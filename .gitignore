@@ -1,4 +1,5 @@
 # ignore ALL .csv files
 *.csv
+*.ipynb
 # ignore ALL files in ANY directory named temp
 data/
