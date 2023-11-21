@@ -3,13 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pyflux as pf
 
-
 import argparse
 
 file_path = "./data/gen_DE_B02.csv"
-
-
-
 
 def load_data(file_path):
     # TODO: Load processed data from CSV file
@@ -37,7 +33,7 @@ def split_data(df):
 
     return X_train, X_val, y_train, y_val
 
-def train_model(X_train, y_train,p,q):
+def train_model(X_train,y_train,p,q):
     # TODO: Initialize your model and train it
 
     model = pf.ARIMA(data=X_train, integ=0 ,ar=p, ma=q, target='quantity', family=pf.Normal())
@@ -57,7 +53,6 @@ if __name__ == "__main__":
 
     df = load_data(file_path)
     X_train, X_val, y_train, y_val = split_data(df)
-        
 
     for p in range(0,p_max):
         for q in range(0,q_max):
