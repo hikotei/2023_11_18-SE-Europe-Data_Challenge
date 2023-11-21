@@ -10,7 +10,7 @@ Team: CleanCoders
 | Forecast Variable | The surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load). |
 | Data | You can only use data up to 01-01-2023. |
 
-### Code Structure
+### Repo Structure
 
       |__README.md
       |__requirements.txt
