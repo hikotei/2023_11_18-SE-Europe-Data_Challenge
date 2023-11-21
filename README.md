@@ -87,18 +87,19 @@ end up with a single CSV file which includes columns per country representing th
 check the exact columns that will need to appear in your dataset by looking at the test.csv file provided inside the data folder.
 
 You will also need to add an additional column that will be your label: the ID of the country with the bigger surplus of green energy for the next hour.
-
 The country IDs used to evaluate your model will be the following:
 
-SP: 0, # Spain  
-UK: 1, # United Kingdom  
-DE: 2, # Germany  
-DK: 3, # Denmark  
-HU: 5, # Hungary  
-SE: 4, # Sweden  
-IT: 6, # Italy  
-PO: 7, # Poland  
-NL: 8  # Netherlands  
+| Country Label | Code | Name             |
+|---------------|------|------------------|
+| SP            | 0    | Spain            |
+| UK            | 1    | United Kingdom   |
+| DE            | 2    | Germany          |
+| DK            | 3    | Denmark          |
+| HU            | 5    | Hungary          |
+| SE            | 4    | Sweden           |
+| IT            | 6    | Italy            |
+| PO            | 7    | Poland           |
+| NL            | 8    | Netherlands      |
 
 ### Model
 
