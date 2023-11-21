@@ -1,26 +1,52 @@
-# SE-Europe-Data_Challenge_Template
+## About The Project: SE-Europe-Data_Challenge_Template
 
-GOAL = predict which European country (by code 1 to 9) will have the highest surplus of green energy in the next hour.
+Hackathon organized by NUWE and Schneider Electric ([Link to Event](https://nuwe.io/dev/competitions/schneider-electric-european-2023))
 
-FCAST VARIABLE = the surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load).
+Team: CleanCoders
 
-DATA = you can only use data up to 01-01-2023
+||Description|
+|------|---------------------------------------------------------------------------------------------------------------|
+| Goal | Predict which European country (by code 1 to 9) will have the highest surplus of green energy in the next hour. |
+| Forecast Variable | The surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load). |
+| Data | You can only use data up to 01-01-2023. |
+
+### Repo Structure
+
+      |__README.md
+      |__requirements.txt
+      |
+      |__data
+      |  |__processed_data.csv
+      |  |__gen[...].csv
+      |  |__load[...].csv
+      |
+      |__src
+      |  |__data_ingestion.py
+      |  |__data_processing.py
+      |  |__model_training.py
+      |  |__model_prediction.py
+      |  |__utils.py
+      |
+      |__models
+      |  |__model.pkl
+      |
+      |__scripts
+      |  |__run_pipeline.sh
+      |
+      |__predictions
+         |__predictions.json
 
 ### Data Import
 
-write code to get ENTSOE Data through API
+get ENTSOE Data through API
 
-You will need to provide a security token to make the ENTSO-E API calls. You can use the following one:
-1d9cd4bd-f8aa-476c-8cc1-3442dc91506d
-
-If the first token reaches its API calls rate limit, you can use the next token:
-fb81432a-3853-4c30-a105-117c86a433ca
+with security tokens:
+- 1d9cd4bd-f8aa-476c-8cc1-3442dc91506d
+- fb81432a-3853-4c30-a105-117c86a433ca
 
 ### Data Processing
 
-#### UPDATE
-
--> The green energies, you can use the ones mentioned above: ["B01", "B09", "B10", "B11", "B12", "B13", "B15", "B16", "B18", "B19"].
+The green energies: ["B01", "B09", "B10", "B11", "B12", "B13", "B15", "B16", "B18", "B19"].
 
 -> The key is in the resampling of 1 hour intervals.
     - Is it possible to group data where there is more than one data in an hour? Yes, in fact that's what you should do! Example: I have 4 values in the same hour, I will have to find the most reliable way to represent those 4 values as one.
@@ -33,8 +59,6 @@ fb81432a-3853-4c30-a105-117c86a433ca
     Example:
     #Interpolate any missing data
     df.interpolate(method='linear', limit_direction='both', inplace=True)
-
-We have decided to accept any solution, whether or not the predictions of 442 values are reached, and to correct each solution one by one. That is to say, even if you try the F1-score and it gives you a low score, it will not be so, as it will be corrected one by one. Also, in order to give you more time, we have decided to leave one more day to make the deliveries. So the final date is Tuesday 21st at 10 CET.
 
 ---
 
@@ -62,16 +86,8 @@ NL: 8  # Netherlands
 
 ### Model
 
-Your model predictions with the test data should be stored in the same format at the example_predictions.json file provided where for each entry (data point of your time series) you have a country ID predicted for the next hour. 
-The final file should be called predictions.json. This file will be the one used to evaluate your model performance on F1-score macro.
+SARIMA-X from statsmodels
 
 ### Train Test Split
 
-1) h-step ahead fcast auf basis vom fcast in (h-1)
-2) 1-step ahead fcast, aber dann 2-step auf basis vom realisierten Wert im Schritt davor aber mit gleichem ARMA Modell
-3) 1-step ahead fcast, aber dann 2-step mit neu trainierten ARMA Modell auf basis vom realisierten Wert im Schritt davor
-   
 ### Evaluation
-If we download 2022 data
-database resampled by hour
-there is only 442 rows left ???
