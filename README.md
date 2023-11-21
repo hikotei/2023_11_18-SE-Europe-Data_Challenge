@@ -1,5 +1,10 @@
 # SE-Europe-Data_Challenge_Template
 
+/Table of Contents
+
+Hackathon organized by NUWE and Schneider Electric ([Link to Event](https://nuwe.io/dev/competitions/schneider-electric-european-2023))
+Team: CleanCoders
+
 ||Description|
 |------|---------------------------------------------------------------------------------------------------------------|
 | Goal | Predict which European country (by code 1 to 9) will have the highest surplus of green energy in the next hour. |
@@ -60,6 +65,6 @@ SARIMA-X from statsmodels
 
 ### Train Test Split
 
-   
 ### Evaluation
 
+### License
