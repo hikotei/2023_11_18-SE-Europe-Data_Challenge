@@ -132,4 +132,4 @@ def main(input_file, model_file):
 if __name__ == "__main__":
 
     args = parse_arguments()
-    main(args.input_file, args.model_fil
+    main(args.input_file, args.model_file)
