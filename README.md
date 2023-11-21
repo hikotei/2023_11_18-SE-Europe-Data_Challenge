@@ -68,19 +68,11 @@ Green energies are defined as: ["B01", "B09", "B10", "B11", "B12", "B13", "B15",
 | B18 | Wind Offshore |
 | B19 | Wind Onshore |
 
--> The key is in the resampling of 1 hour intervals.
-    - Is it possible to group data where there is more than one data in an hour? Yes, in fact that's what you should do! Example: I have 4 values in the same hour, I will have to find the most reliable way to represent those 4 values as one.
-    - If I only have data for one hour, what do I do? Only the data of that hour is taken, the other 23 hours are not taken.
-    - If I have only 15 minutes of data for one hour, what do I do? There are operations that can be applied to fill in the other 3 and get the value of the hour. This is for you to decide.
+Imported Data is reindexed based on its original frequency either in 15 min or 60 min intervals, missing intervals get NaN.
+Linear interpolation where missing values in the dataset are imputed as the mean between the preceding and following values.
 
--> When is it considered that there is no data? The key is that you have to gather all countries and adjust the intervals regularly to 1H, when there are countries that have no data at a certain time or day, that is simply 0 (or the NaN should be set to 0 as the challenge explains, it is part of handling the missing data).
-
--> How to interpolate the data: "Missing values in the dataset should be imputed as the mean between the preceding and following values". 
-    Example:
-    #Interpolate any missing data
+    # Example:
     df.interpolate(method='linear', limit_direction='both', inplace=True)
-
----
 
 Missing values in the dataset should be imputed as the mean between the preceding and following values. Data with resolution finer than 1 hour must be resampled to an hourly level.
 
