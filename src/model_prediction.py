@@ -61,7 +61,8 @@ def make_predictions(df, model):
 def save_predictions(predictions, predictions_file):
 
     # Save predictions to a JSON file
-    predictions.to_json(predictions_file)
+    res_df = pd.DataFrame({'target' : predictions})
+    res_df.to_json(predictions_file)
 
     pass
 
