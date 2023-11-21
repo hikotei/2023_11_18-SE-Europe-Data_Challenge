@@ -1,8 +1,8 @@
+<img src="logo.jpeg" align="right" />
+
 # SE-Europe-Data_Challenge
 
 ### About The Project: 
-
-<img src="logo.jpeg" align="right" />
 
 Hackathon organized by NUWE and Schneider Electric ([Link to Event](https://nuwe.io/dev/competitions/schneider-electric-european-2023))
 
