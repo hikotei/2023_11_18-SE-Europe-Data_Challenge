@@ -69,10 +69,6 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
         model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit()
         model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit()
 
-
-        #model_gen_test_dict[country] = sm.tsa.SARIMAX(data[green_gen_dict[country]], order=(4,0,12)).filter(model_gen_training_dict[country].params)
-        #model_load_test_dict[country] = sm.tsa.SARIMAX(data[load_dict[country]], order=(4,0,12)).filter(model_load_training_dict[country].params)
-    
         print(country+" has been trained successfully")
     
     model = [model_gen_training_dict,model_load_training_dict]
