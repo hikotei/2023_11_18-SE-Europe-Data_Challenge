@@ -118,4 +118,4 @@ ARIMA model of order(4,0,12) from [statsmodels](https://www.statsmodels.org/stab
 
 ### Prediction
 
-- 1 step ahead forecast are made
+- 1 step ahead forecast are made; we use a static model and data upto t to predict the value for t+1
