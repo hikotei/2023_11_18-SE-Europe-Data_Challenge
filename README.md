@@ -99,6 +99,8 @@ The country IDs used to evaluate your model will be the following:
 
 SARIMA-X from statsmodels
 
+order(4,12)
+
 ### Train Test Split
 
 - Train = 80% and Test = 20%
