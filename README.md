@@ -17,8 +17,7 @@ Team: CleanCoders
       |
       |__data
       |  |__processed_data.csv
-      |  |__gen[...].csv
-      |  |__load[...].csv
+      |  |__[...]                  # various gen and load .csv files for each country
       |
       |__src
       |  |__data_ingestion.py
@@ -30,11 +29,14 @@ Team: CleanCoders
       |__models
       |  |__model.pkl
       |
+      |__z_notebooks
+      |  |__[...]                 # various ipynb for exploratory data analysis etc
+      |
       |__scripts
       |  |__run_pipeline.sh
       |
       |__predictions
-         |__predictions.json
+      |  |__predictions.json
 
 ### Data Import
 
