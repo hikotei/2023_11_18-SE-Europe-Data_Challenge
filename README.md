@@ -12,31 +12,32 @@ Team: CleanCoders
 
 ### Repo Structure
 
-      |__README.md
-      |__requirements.txt
-      |
-      |__data
-      |  |__processed_data.csv
-      |  |__[...]                  # various gen and load .csv files for each country
-      |
-      |__src
-      |  |__data_ingestion.py
-      |  |__data_processing.py
-      |  |__model_training.py
-      |  |__model_prediction.py
-      |  |__utils.py
-      |
-      |__models
-      |  |__model.pkl
-      |
-      |__z_notebooks
-      |  |__[...]                 # various ipynb for exploratory data analysis etc
-      |
-      |__scripts
-      |  |__run_pipeline.sh
-      |
-      |__predictions
-      |  |__predictions.json
+            |__README.md
+            |__requirements.txt
+            |
+            |__data
+            |  |__processed_data.csv
+            |  |__[...]                        # various gen and load .csv files for each country
+            |
+            |__src
+            |  |__data_ingestion.py          # import data and save to .csv files in ./data
+            |  |__data_processing.py         # preprocess data (reindex, interpolate, features, and labeling)
+            |  |__model_training.py          # train SARIMA model
+            |  |__model_prediction.py        # output predictions
+            |  |__utils.py                   # util functions to process get requests to ENTSO-E API                      
+            |
+            |__models
+            |  |__model.pkl
+            |
+            |__z_notebooks
+            |  |__[...]                        # various ipynb for exploratory data analysis etc
+            |
+            |__scripts
+            |  |__run_pipeline.sh
+            |
+            |__predictions
+            |  |__predictions.json
+
 
 ### Data Import
 
@@ -48,7 +49,21 @@ with security tokens:
 
 ### Data Processing
 
-The green energies: ["B01", "B09", "B10", "B11", "B12", "B13", "B15", "B16", "B18", "B19"].
+Green energies are defined as: ["B01", "B09", "B10", "B11", "B12", "B13", "B15", "B16", "B18", "B19"].  
+(See ENTSO-E [documentation](https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_psrtype:~:text=Hourly-,A.5.%20PsrType,-Code) for further information.)
+
+| Code | Meaning |
+|------|--------|
+| B01 | Biomass |
+| B09 | Geothermal |
+| B10 | Hydro Pumped Storage |
+| B11 | Hydro Run-of-river and poundage |
+| B12 | Hydro Water Reservoir |
+| B13 | Marine |
+| B15 | Nuclear |
+| B16 | Solar |
+| B18 | Wind Offshore |
+| B19 | Wind Onshore |
 
 -> The key is in the resampling of 1 hour intervals.
     - Is it possible to group data where there is more than one data in an hour? Yes, in fact that's what you should do! Example: I have 4 values in the same hour, I will have to find the most reliable way to represent those 4 values as one.
