@@ -85,6 +85,10 @@ def clean_data(df_dict: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
     - Dict[str, pd.DataFrame]: A dictionary where keys are the names of DataFrames, and values are cleaned DataFrames.
     """
 
+    print('= '*15)
+    print('start clean')
+    print('= '*15)
+
     df_dict_clean = {}
 
     for df_name, df in df_dict.items():
@@ -145,10 +149,12 @@ def preprocess_data(df_dict: Dict[str, pd.DataFrame]) -> pd.DataFrame:
     - pd.DataFrame: The preprocessed DataFrame.
     """
 
+    print('= '*15)
+    print('start preprocessing')
+    print('= '*15)
+
     df_processed = pd.DataFrame()
     country_list: List[str] = []
-
-    print('start preprocessing')
 
     for df_name, df in df_dict.items():
 

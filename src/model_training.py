@@ -3,6 +3,12 @@ import statsmodels.api as sm
 import argparse
 import pickle
 
+import warnings
+from statsmodels.tools.sm_exceptions import ConvergenceWarning, ModelWarning
+warnings.simplefilter('ignore', ConvergenceWarning)
+warnings.simplefilter('ignore', ModelWarning)
+warnings.simplefilter('ignore', UserWarning)
+
 def load_data(file_path : str):
 
     """ 
@@ -25,12 +31,15 @@ def split_data(df : pd.DataFrame):
     """
 
     # Define cut off
-    cut_off_percentage = 0.8
+    cut_off_percentage = 0.1
     cut_off = int(cut_off_percentage*len(df))
 
     # Split data set
     X_train = df[:cut_off]
     X_val = df[cut_off:]
+
+    X_val.to_csv('data/test_data.csv', index=False)
+    
     y_train = df[:cut_off]
     y_val = df[cut_off:]
     
@@ -64,7 +73,7 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
     country_labels = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
 
     # Model Training and initialization
-    for country in country_labels:
+    for idx, country in enumerate(country_labels):
         
         green_gen_dict[country] = "green_energy_" + country
         load_dict[country] = country + "_load"
@@ -72,7 +81,7 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
         # Train models based on X_train
         model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit(disp=False)
         model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit(disp=False)
-        print(country+" has been trained successfully")
+        print(f"{idx}/{len(country_labels)} ... {country} has been trained successfully")
     
     model = [model_gen_training_dict,model_load_training_dict]
     
