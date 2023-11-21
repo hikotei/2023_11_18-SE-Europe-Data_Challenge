@@ -1,4 +1,4 @@
-<img src="logo.jpeg" align="right" />
+<img src="logo.jpeg" align="right" width="200"  />
 
 # SE-Europe-Data_Challenge
 
