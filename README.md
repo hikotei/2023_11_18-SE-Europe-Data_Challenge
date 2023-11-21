@@ -24,6 +24,7 @@ Team: **CleanCoders**
 - pickle
 - statsmodels.api
 - typing
+- warnings
 
 ### Repo Structure
  
@@ -106,7 +107,9 @@ The country IDs used to evaluate your model will be the following:
 
 ### Model
 
-ARIMA of order(4,0,12) from statsmodels fitted on each country's green energy production
+ARIMA model of order(4,0,12) from [statsmodels](https://www.statsmodels.org/stable/index.html) fitted on each country's green energy production and load
+- model order was determined from grid search and minimization of combined AIC and BIC selection metrics
+- option to determine best lag order per country using separate grid searches (but takes a long time, approx 5 min per lag order per country)
 
 ### Train Test Split
 
