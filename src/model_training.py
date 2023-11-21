@@ -3,21 +3,24 @@ import statsmodels.api as sm
 import argparse
 import pickle
 
-
 def load_data(file_path : str):
+
     """ 
     Method loads data from CSV file
+
     """
 
     df = pd.read_csv(file_path)
+
     return df
 
 def split_data(df : pd.DataFrame):
+
     """ 
     Method splits data into training and validation sets 
     (the test set is already provided in data/test_data.csv)
     
-    We ommit y-lables as we use autoregression only and no external regressors
+    We ommit y-labels as we use autoregression only and no external regressors
 
     """
 
@@ -34,6 +37,7 @@ def split_data(df : pd.DataFrame):
     return X_train, X_val, y_train, y_val
 
 def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
+
     """ 
     Method trains an ARMA (4,12) Model for green generation and load for each coutntry
 
@@ -62,13 +66,12 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
     # Model Training and initialization
     for country in country_labels:
         
-        green_gen_dict[country] = country + "_green_MAW"
-        load_dict[country] = country + "_load_MAW"
+        green_gen_dict[country] = "green_energy_" + country
+        load_dict[country] = country + "_load"
     
         # Train models based on X_train
-        model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit()
-        model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit()
-
+        model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit(disp=False)
+        model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit(disp=False)
         print(country+" has been trained successfully")
     
     model = [model_gen_training_dict,model_load_training_dict]
@@ -76,19 +79,27 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
     return model
 
 def save_model(model, model_path):
-    # TODO: Save your trained model
-    with open(model_path,'wb') as f:
-        pickle.dump(model,f)
-    pass
+
+    """
+    Save the trained model to the specified model_path
+    """
+
+    with open(model_path, 'wb') as file:
+        pickle.dump(model, file)
+
+    return
 
 def parse_arguments():
+
     parser = argparse.ArgumentParser(description='Model training script for Energy Forecasting Hackathon')
+
     parser.add_argument(
         '--input_file', 
         type=str, 
         default='data/processed_data.csv', 
         help='Path to the processed data file to train the model'
     )
+
     parser.add_argument(
         '--model_file', 
         type=str, 
@@ -98,6 +109,7 @@ def parse_arguments():
     return parser.parse_args()
 
 def main(input_file, model_file):
+
     df = load_data(input_file)
     X_train, X_val, y_train, y_val = split_data(df)
     model = train_model(X_train, y_train)

@@ -91,7 +91,7 @@ def clean_data(df_dict: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
 
         if df.empty:
             print('-' * 15)
-            print(f'{df_name} is empty')
+            print(f'cleaning: {df_name} is empty')
             print('-' * 15)
             continue
 
@@ -148,11 +148,13 @@ def preprocess_data(df_dict: Dict[str, pd.DataFrame]) -> pd.DataFrame:
     df_processed = pd.DataFrame()
     country_list: List[str] = []
 
+    print('start preprocessing')
+
     for df_name, df in df_dict.items():
 
         if df.empty:
             print('-' * 15)
-            print(f'{df_name} is empty')
+            print(f'processing: {df_name} is empty')
             print('-' * 15)
             continue
 
@@ -172,7 +174,7 @@ def preprocess_data(df_dict: Dict[str, pd.DataFrame]) -> pd.DataFrame:
         # Resample (aggregate) to hourly level and sum
         df_resampled = df.resample("1h", label="left").sum()
         # Assign a new column name including country, power type, and unit information
-        new_name = f"{country}_{pwr_type}_{UnitName}"
+        new_name = f"{country}_{pwr_type}"
         df_resampled.rename(columns={df_resampled.columns[0]: new_name}, inplace=True)
 
         # Concatenate to the output dataframe
@@ -189,15 +191,22 @@ def preprocess_data(df_dict: Dict[str, pd.DataFrame]) -> pd.DataFrame:
                          and any(energy_type in col for energy_type in green_energy_types_list)]
 
         # Sum of green energies
-        df_processed[f"{country}_green_MAW"] = df_processed[green_columns].sum(axis=1)
+        df_processed[f"green_energy_{country}"] = df_processed[green_columns].sum(axis=1)
 
-        # Green energy surplus = difference between DE_green_MAW and DE_load_MAW
-        load_column = f"{country}_load_MAW"
-        df_processed[f"{country}_green_surplus_MAW"] = df_processed[f"{country}_green_MAW"] - df_processed[load_column]
+        # Green energy surplus = difference between DE_green_energy and DE_load
+        load_col = f"{country}_load"
+        if (load_col in df_processed.columns) : load = df_processed[load_col]
+        else : load = 0
+
+        green_col = f"green_energy_{country}"
+        if (green_col in df_processed.columns) : green_energy = df_processed[green_col]
+        else : green_energy = 0
+
+        df_processed[f"{country}_green_surplus"] = green_energy - load
 
     # Add column with the country that has the highest surplus of green energy at each hour
     df_processed['max_surplus_country_name'] = df_processed.apply(
-        lambda row: max(country_list, key=lambda country: row[f"{country}_green_surplus_MAW"]), axis=1
+        lambda row: max(country_list, key=lambda country: row[f"{country}_green_surplus"]), axis=1
     )
 
     # Map the country code based on the order defined in country_code_order
@@ -223,7 +232,7 @@ def save_data(df: pd.DataFrame, output_file: str) -> None:
 
     df.to_csv(output_file, index=False)
 
-    return None
+    return
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 

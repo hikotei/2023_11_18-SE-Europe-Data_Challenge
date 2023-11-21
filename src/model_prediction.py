@@ -4,8 +4,10 @@ import pickle
 import statsmodels.api as sm
 
 def load_data(file_path):
+
     # Load test data from CSV file
     df = pd.read_csv(file_path)
+
     return df
 
 def load_model(model_path):
@@ -17,6 +19,7 @@ def load_model(model_path):
     return model
 
 def make_predictions(df, model):
+
     # Use the model to make predictions on the test data
     
     green_gen_dict = dict()
@@ -44,8 +47,9 @@ def make_predictions(df, model):
         model_gen_test_dict[country] = sm.tsa.SARIMAX(df[green_gen_dict[country]], order=(4,0,12)).filter(model_gen_training_dict[country].params)
         model_load_test_dict[country] = sm.tsa.SARIMAX(df[load_dict[country]], order=(4,0,12)).filter(model_load_training_dict[country].params)
     
-        surplus_pred_df[country] = model_gen_test_dict[country].predict()-model_load_test_dict[country].predict()
+        surplus_pred_df[country] = model_gen_test_dict[country].predict() - model_load_test_dict[country].predict()
 
+    # lots of data missing from UK, so drop it
     surplus_pred_df = surplus_pred_df.drop('UK',axis=1)
 
     print(surplus_pred_df.head())
@@ -55,8 +59,10 @@ def make_predictions(df, model):
     return predictions
 
 def save_predictions(predictions, predictions_file):
+
     # Save predictions to a JSON file
     predictions.to_json(predictions_file)
+
     pass
 
 def parse_arguments():
@@ -64,7 +70,7 @@ def parse_arguments():
     parser.add_argument(
         '--input_file', 
         type=str, 
-        default='data/test_data.csv', 
+        default='./data/test_data.csv', 
         help='Path to the test data file to make predictions'
     )
     parser.add_argument(

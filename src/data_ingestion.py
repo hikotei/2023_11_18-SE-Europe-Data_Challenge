@@ -21,7 +21,7 @@ def get_load_data_from_entsoe(regions, periodStart='202201010000', periodEnd='20
     # Loop through the regions and get data for each region
     for region, area_code in regions.items():
 
-        print(f'Fetching data for {region}...')
+        print(f'Fetching load data for {region}...')
         params['outBiddingZone_Domain'] = area_code
     
         # Use the requests library to get data from the API for the specified time range
@@ -54,7 +54,7 @@ def get_gen_data_from_entsoe(regions, periodStart='202302240000', periodEnd='202
 
     # Loop through the regions and get data for each region
     for region, area_code in regions.items():
-        print(f'Fetching data for {region}...')
+        print(f'Fetching gen data for {region}...')
         params['outBiddingZone_Domain'] = area_code
         params['in_Domain'] = area_code
     
@@ -85,7 +85,7 @@ def parse_arguments():
     parser.add_argument(
         '--end_time', 
         type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), 
-        default=datetime.datetime(2023, 1, 1), 
+        default=datetime.datetime(2022, 1, 30), 
         help='End time for the data to download, format: YYYY-MM-DD'
     )
     parser.add_argument(
