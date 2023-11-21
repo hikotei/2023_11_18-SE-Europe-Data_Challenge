@@ -12,31 +12,31 @@ Team: CleanCoders
 
 ### Repo Structure
  
-      |__README.md
-      |__requirements.txt
-      |
-      |__data
-      |  |__processed_data.csv
-      |  |__[...]                        # various gen and load .csv files for each country
-      |
-      |__src
-      |  |__data_ingestion.py          # import data and save to .csv files in ./data
-      |  |__data_processing.py         # preprocess data (reindex, interpolate, features, and labeling)
-      |  |__model_training.py          # train SARIMA model
-      |  |__model_prediction.py        # output predictions
-      |  |__utils.py                   # util functions to process get requests to ENTSO-E API                      
-      |
-      |__models
-      |  |__model.pkl
-      |
-      |__z_notebooks
-      |  |__[...]                        # various ipynb for exploratory data analysis etc
-      |
-      |__scripts
-      |  |__run_pipeline.sh
-      |
-      |__predictions
-      |  |__predictions.json
+     |__README.md
+     |__requirements.txt
+     |
+     |__data
+     |  |__processed_data.csv
+     |  |__[...]                      # various gen and load .csv files for each country
+     |
+     |__src
+     |  |__data_ingestion.py          # import data and save to .csv files in ./data
+     |  |__data_processing.py         # preprocess data (reindex, interpolate, features, and labeling)
+     |  |__model_training.py          # train SARIMA model
+     |  |__model_prediction.py        # output predictions
+     |  |__utils.py                   # util functions to process get requests to ENTSO-E API                      
+     |
+     |__models
+     |  |__model.pkl
+     |
+     |__z_notebooks
+     |  |__[...]                      # various ipynb for exploratory data analysis etc
+     |
+     |__scripts
+     |  |__run_pipeline.sh
+     |
+     |__predictions
+     |  |__predictions.json
 
 ### Data Import
 
