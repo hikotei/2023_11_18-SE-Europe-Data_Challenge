@@ -1,12 +1,14 @@
 <img src="logo.jpeg" align="right" width="250"  />
 
-# SE-Europe-Data_Challenge
+# Schneider Electric European Hackathon 2023
+
+Hackathon organized by NUWE and Schneider Electric ([Link to Event](https://nuwe.io/dev/competitions/schneider-electric-european-2023))  
+
+Division: EcoForecast: Revolutionizing Green Energy Surplus Prediction in Europe  
+
+Team: **CleanCoders**  
 
 ### About The Project: 
-
-Hackathon organized by NUWE and Schneider Electric ([Link to Event](https://nuwe.io/dev/competitions/schneider-electric-european-2023))
-
-Team: CleanCoders
 
 ||Description|
 |------|---------------------------------------------------------------------------------------------------------------|
@@ -44,9 +46,7 @@ Team: CleanCoders
 
 ### Data Import
 
-get ENTSOE Data through API
-
-with security tokens:
+get ENTSOE Data through API with security tokens:
 - 1d9cd4bd-f8aa-476c-8cc1-3442dc91506d
 - fb81432a-3853-4c30-a105-117c86a433ca
 
@@ -68,20 +68,18 @@ Green energies are defined as: ["B01", "B09", "B10", "B11", "B12", "B13", "B15",
 | B18 | Wind Offshore |
 | B19 | Wind Onshore |
 
-Imported Data is reindexed based on its original frequency either in 15 min or 60 min intervals, missing intervals get NaN.
-Linear interpolation where missing values in the dataset are imputed as the mean between the preceding and following values.
+- Imported data is first reindexed based on its original frequency either in 15 min or 60 min intervals, missing intervals get NaN.
+- The data is then resampled and aggregated to hourly intervals.
+- Linear interpolation where missing values in the dataset are imputed as the mean between the preceding and following values.
 
-    # Example:
-    df.interpolate(method='linear', limit_direction='both', inplace=True)
-
-Missing values in the dataset should be imputed as the mean between the preceding and following values. Data with resolution finer than 1 hour must be resampled to an hourly level.
-
-identify what energy types each column represent, and discard the ones that are not green energy sources (You can refer to the ENTSO-E Transparency portal API documentation to understand how the energy source types are represented)
-
-end up with a single CSV file which includes columns per country representing the following values: generated green energy per energy type (one column per wind, solar, etc), and load. Make sure that all those values are in the same units (MAW).
-
-check the exact columns that will need to appear in your dataset by looking at the test.csv file provided inside the data folder.
-
+``` py
+# Example:
+df.interpolate(method='linear', limit_direction='both', inplace=True)
+```
+ 
+- Green energy types are summed up to a column representing total green energy production per country (e.g. DE_green_energy)
+- Using load data (e.g. DE_load) we can then calculate surplus green energy production by subtracting load from total green energy production by country (e.g. DE_green_surplus)
+  
 You will also need to add an additional column that will be your label: the ID of the country with the bigger surplus of green energy for the next hour.
 The country IDs used to evaluate your model will be the following:
 
@@ -103,4 +101,9 @@ SARIMA-X from statsmodels
 
 ### Train Test Split
 
-### Evaluation
+- Train = 80% and Test = 20%
+- F1 Macro Score used as metric
+
+### Prediction
+
+- 1 step ahead forecast are made
