@@ -12,29 +12,29 @@ Team: CleanCoders
 
 ### Code Structure
 
-|__README.md
-|__requirements.txt
-|
-|__data
-|  |__processed_data.csv
-|  |__gen[...].csv
-|  |__load[...].csv
-|
-|__src
-|  |__data_ingestion.py
-|  |__data_processing.py
-|  |__model_training.py
-|  |__model_prediction.py
-|  |__utils.py
-|
-|__models
-|  |__model.pkl
-|
-|__scripts
-|  |__run_pipeline.sh
-|
-|__predictions
-   |__predictions.json
+   |__README.md
+   |__requirements.txt
+   |
+   |__data
+   |  |__processed_data.csv
+   |  |__gen[...].csv
+   |  |__load[...].csv
+   |
+   |__src
+   |  |__data_ingestion.py
+   |  |__data_processing.py
+   |  |__model_training.py
+   |  |__model_prediction.py
+   |  |__utils.py
+   |
+   |__models
+   |  |__model.pkl
+   |
+   |__scripts
+   |  |__run_pipeline.sh
+   |
+   |__predictions
+      |__predictions.json
 
 ### Data Import
 
