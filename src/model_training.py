@@ -1,68 +1,87 @@
 import pandas as pd
-
-import matplotlib.pyplot as plt
-import pyflux as pf
-
-
+import statsmodels.api as sm
 import argparse
-
-file_path = "./data/gen_DE_B02.csv"
-
+import pickle
 
 
-
-def load_data(file_path):
-    # TODO: Load processed data from CSV file
+def load_data(file_path : str):
+    """ 
+    Method loads data from CSV file
+    """
 
     df = pd.read_csv(file_path)
-
-    df['timestamp'] = df['StartTime'].astype('string')
-    df['timestamp'] = df['timestamp'].str.replace('T', ' ')
-    df['timestamp'] = df['timestamp'].str.replace('Z', '')
-    df['timestamp'] = pd.to_datetime(df['timestamp'], format="%Y-%m-%d %H:%M%z")
-
     return df
 
-def split_data(df):
-    # TODO: Split data into training and validation sets (the test set is already provided in data/test_data.csv)
+def split_data(df : pd.DataFrame):
+    """ 
+    Method splits data into training and validation sets 
+    (the test set is already provided in data/test_data.csv)
     
-    # Define split time
-    split_stamp = pd.Timestamp(year=2023, month=1, day=1, hour=22,tz="Europe/Berlin")
-    
-    # Split data set
-    X_train = df[df.timestamp <= split_stamp]
-    X_val = df[df.timestamp > split_stamp]
-    y_train = df[df.timestamp <= split_stamp]
-    y_val = df[df.timestamp > split_stamp]
+    We ommit y-lables as we use autoregression only and no external regressors
 
+    """
+
+    # Define cut off
+    cut_off_percentage = 0.8
+    cut_off = int(cut_off_percentage*len(df))
+
+    # Split data set
+    X_train = df[:cut_off]
+    X_val = df[cut_off:]
+    y_train = df[:cut_off]
+    y_val = df[cut_off:]
+    
     return X_train, X_val, y_train, y_val
 
-def train_model(X_train, y_train):
-    # TODO: Initialize your model and train it
-    #pf.acf_plot(X_train.quantity)
-    #plt.plot(X_train.quantity)
-    #plt.show()
-    #plt.plot(X_train.quantity.diff())
-    #plt.show()
-    #pf.acf_plot(X_train.quantity.diff())
+def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
+    """ 
+    Method trains an ARMA (4,12) Model for green generation and load for each coutntry
+
+    Input: Training data (pd.DataFrame)
+    Returns: List of dictionaries containing the models
     
-    model = pf.ARIMA(data=X_train, ar=4, ma=4, target='quantity', family=pf.Normal())
-    x = model.fit("MLE")
-    x.summary()
-    #model.plot_fit(figsize=(15,5))
-    model.plot_predict(h=20,past_values=20,figsize=(15,5))
-    pass
-    #return model
+    """
+    
+    model = list()
+
+    # Green energy generation dictionary
+    # Key: country (str), Value: colum_name (str) 
+    green_gen_dict = dict()
+    
+    # Load dictionary
+    # Key: country (str), Value: colum_name (str) 
+    load_dict = dict()
+
+    # Model dictionaries
+    # Key: country (str), Value: ARMA(4,12) (Model) 
+    model_gen_training_dict = dict()
+    model_load_training_dict = dict()
+    
+    country_labels = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
+
+    # Model Training and initialization
+    for country in country_labels:
+        
+        green_gen_dict[country] = country + "_green_MAW"
+        load_dict[country] = country + "_load_MAW"
+    
+        # Train models based on X_train
+        model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit()
+        model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit()
 
 
-def validate_model():
-    # TODO: Validate model based on F1 Score
-
-    return
-
+        #model_gen_test_dict[country] = sm.tsa.SARIMAX(data[green_gen_dict[country]], order=(4,0,12)).filter(model_gen_training_dict[country].params)
+        #model_load_test_dict[country] = sm.tsa.SARIMAX(data[load_dict[country]], order=(4,0,12)).filter(model_load_training_dict[country].params)
+    
+        print(country+" has been trained successfully")
+    
+    model = [model_gen_training_dict,model_load_training_dict]
+    
+    return model
 
 def save_model(model, model_path):
     # TODO: Save your trained model
+    pickle.dump(model,model_path)
     pass
 
 def parse_arguments():
@@ -88,17 +107,6 @@ def main(input_file, model_file):
     save_model(model, model_file)
 
 if __name__ == "__main__":
-    
-    #print(pd.to_datetime(time))
 
-    #year,month,day,hour,minunte,na_1,na_2 = time.replace("T","-").replace(":","-").replace("+","-").split("-")
-    
-    #print(string_parts)
-
-    #pd.to_datetime(time,"yyyy-mm-dd")
-    df = load_data(file_path)
-    X_train, X_val, y_train, y_val = split_data(df)
-    train_model(X_train,y_train)
-
-    #args = parse_arguments()
-    #main(args.input_file, args.model_file)
+    args = parse_arguments()
+    main(args.input_file, args.model_file)
