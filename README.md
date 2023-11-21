@@ -63,29 +63,13 @@ NL: 8  # Netherlands
 ### Model
 
 Your model predictions with the test data should be stored in the same format at the example_predictions.json file provided where for each entry (data point of your time series) you have a country ID predicted for the next hour. 
-
 The final file should be called predictions.json. This file will be the one used to evaluate your model performance on F1-score macro.
 
 ### Train Test Split
 
-Green Generation
-Load
-
-Ziel = diese beiden fcasten damit Surplus geschätzt werden
-
-Train = 80%
-
-Model 1 = ARMA (1,1)
-Model 2 = ARMA (2,2)
-
-t=80
-
-Test = 20%
-
-1) zusammenhängende i - step ahead fcast mit i in {1,...,20} auf basis von fcast also fcast 2 = beta * fcast 1
-  
-2) 1-step ahead fcast, aber dann 2-step auf basis von realisiertem werte in h=1
-3) mache 1-step ahead (t=81) fcast mit beta1 , gegeben realisation fitte neues ARMA und mache nächsten 1-step (t=82) fcast mit beta2
+1) h-step ahead fcast auf basis vom fcast in (h-1)
+2) 1-step ahead fcast, aber dann 2-step auf basis vom realisierten Wert im Schritt davor aber mit gleichem ARMA Modell
+3) 1-step ahead fcast, aber dann 2-step mit neu trainierten ARMA Modell auf basis vom realisierten Wert im Schritt davor
    
 ### Evaluation
 If we download 2022 data
