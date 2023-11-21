@@ -73,6 +73,74 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
     model_load_training_dict = dict()
     
     country_labels = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
+    
+    find_best_lags_bool = False
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # If needed ... Find best lags for each country
+
+    if (find_best_lags_bool == True) :
+            
+        p_vals = range(3,6)
+        q_vals = range(3,6)
+
+        all_res = []
+        for idx, data_name in enumerate(relevant_cols) :
+
+            print('= '*30)
+            print(f"start {data_name} {idx+1}/{len(relevant_cols)}")
+
+            # demean data
+            mean = df_green_surplus[data_name].mean()
+            data = df_green_surplus[data_name] - mean
+            # set frequency to hourly
+            data = data.asfreq('H')
+
+            # Create dataframe to store results
+            results = []
+
+            # Loop through p and q values
+            for p_val in p_vals:
+                for q_val in q_vals:
+
+                    print(f"p={p_val}, q={q_val}")
+
+                    try:
+                        # Fit ARIMA model
+                        order = (p_val, 0, q_val)
+                        model = ARIMA(data, order=order)
+                        fit_model = model.fit(low_memory=True)
+
+                        # Get BIC and AIC values
+                        bic = fit_model.bic
+                        aic = fit_model.aic
+
+                        # Save results in the dataframe
+                        results.append({'country' : data_name, 'mean' : mean,
+                                        'p': p_val, 'q': q_val, 
+                                        'BIC': bic, 'AIC': aic, 'IC_comb' : bic+aic})
+
+                    except Exception as e:
+                        print(f"An error occurred: {e}")
+
+            results_df = pd.DataFrame(results)
+            print(results_df)
+
+            # Find the best p and q based on lowest combined AIC and BIC
+            best_params = results_df.loc[results_df['IC_comb'].idxmin()]
+            print('-'*30)
+            print(f"Best p = {best_params['p']}, best q = {best_params['q']}")
+            print('-'*30)
+
+            # save best params p and q in dataframe for each loop iteration
+            all_res.append(best_params)
+
+        all_res_df = pd.DataFrame(all_res)
+        
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+    # Take given lag order to reduce computation time
+    lag_order = (4,0,12)
 
     # Model Training and initialization
     for idx, country in enumerate(country_labels):
@@ -82,8 +150,8 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
         load_dict[country] = country + "_load"
     
         # Train models based on X_train
-        model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=(4,0,12)).fit(disp=False)
-        model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=(4,0,12)).fit(disp=False)
+        model_gen_training_dict[country] = sm.tsa.SARIMAX(X_train[green_gen_dict[country]], order=lag_order).fit(disp=False)
+        model_load_training_dict[country] = sm.tsa.SARIMAX(X_train[load_dict[country]], order=lag_order).fit(disp=False)
         print(f"... training done")
     
     model = [model_gen_training_dict, model_load_training_dict]
