@@ -77,7 +77,8 @@ def train_model(X_train : pd.DataFrame, y_train : pd.DataFrame):
 
 def save_model(model, model_path):
     # TODO: Save your trained model
-    pickle.dump(model,model_path)
+    with open(model_path,'wb') as f:
+        pickle.dump(model,f)
     pass
 
 def parse_arguments():

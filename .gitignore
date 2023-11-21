@@ -1,5 +1,9 @@
 # ignore ALL .csv files
+
 *.csv
 *.ipynb
+*.pkl
+
 # ignore ALL files in ANY directory named temp
 data/
+models/

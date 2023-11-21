@@ -10,7 +10,10 @@ def load_data(file_path):
 
 def load_model(model_path):
     # Load the trained model
-    model =pickle.load(model_path)
+
+    with open(model_path,'rb') as f:
+        model =pickle.load(f)
+
     return model
 
 def make_predictions(df, model):
@@ -28,12 +31,14 @@ def make_predictions(df, model):
     surplus_pred_df = pd.DataFrame()
 
     country_labels = ['HU', 'IT', 'PO', 'SP', 'UK', 'DE', 'DK', 'SE', 'NE']
+
+    
     country_codes_dict = {'SP': 0, 'UK': 1, 'DE': 2, 'DK': 3, 'SE': 4, 'HU': 5, 'IT': 6, 'PO': 7, 'NL': 8}
 
     # Model Training and initialization
     for country in country_labels:
 
-        green_gen_dict[country] = country + "_green"
+        green_gen_dict[country] = "green_energy_" + country
         load_dict[country] = country + "_load"
 
         model_gen_test_dict[country] = sm.tsa.SARIMAX(df[green_gen_dict[country]], order=(4,0,12)).filter(model_gen_training_dict[country].params)

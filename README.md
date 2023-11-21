@@ -16,6 +16,15 @@ Team: **CleanCoders**
 | Forecast Variable | The surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load). |
 | Data | You can only use data up to 2023-01-01. |
 
+### Dependencies
+- argparse
+- datetime
+- os
+- pandas
+- pickle
+- statsmodels.api
+- typing
+
 ### Repo Structure
  
      |__README.md
@@ -53,7 +62,7 @@ get ENTSOE Data through API with security tokens:
 ### Data Processing
 
 Green energies are defined as: ["B01", "B09", "B10", "B11", "B12", "B13", "B15", "B16", "B18", "B19"].  
-(See ENTSO-E [documentation](https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_psrtype:~:text=Hourly-,A.5.%20PsrType,-Code) for further information.)
+(See ENTSOE [API - user guide](https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_psrtype:~:text=Hourly-,A.5.%20PsrType,-Code) for further information.)
 
 | Code | Meaning |
 |------|--------|
@@ -97,7 +106,7 @@ The country IDs used to evaluate your model will be the following:
 
 ### Model
 
-SARIMA-X from statsmodels
+ARIMA of order(4,0,12) from statsmodels fitted on each country's green energy production
 
 ### Train Test Split
 
