@@ -1,6 +1,7 @@
 ## About The Project: SE-Europe-Data_Challenge_Template
 
 Hackathon organized by NUWE and Schneider Electric ([Link to Event](https://nuwe.io/dev/competitions/schneider-electric-european-2023))
+
 Team: CleanCoders
 
 ||Description|
@@ -8,6 +9,32 @@ Team: CleanCoders
 | Goal | Predict which European country (by code 1 to 9) will have the highest surplus of green energy in the next hour. |
 | Forecast Variable | The surplus of green energy is the difference between the summation of all generated green energy and the consumed energy (load). |
 | Data | You can only use data up to 01-01-2023. |
+
+### Code Structure
+
+|__README.md
+|__requirements.txt
+|
+|__data
+|  |__processed_data.csv
+|  |__gen[...].csv
+|  |__load[...].csv
+|
+|__src
+|  |__data_ingestion.py
+|  |__data_processing.py
+|  |__model_training.py
+|  |__model_prediction.py
+|  |__utils.py
+|
+|__models
+|  |__model.pkl
+|
+|__scripts
+|  |__run_pipeline.sh
+|
+|__predictions
+   |__predictions.json
 
 ### Data Import
 
