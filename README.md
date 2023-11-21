@@ -74,4 +74,4 @@ The final file should be called predictions.json. This file will be the one used
 ### Evaluation
 If we download 2022 data
 database resampled by hour
-there is only 442 rows left
+there is only 442 rows left ???
